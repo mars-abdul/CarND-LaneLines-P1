@@ -28,7 +28,7 @@ Original colored image (RGB channels) is imported in notebook and converted to a
 - Guassian Smoothing
 Next Guassian smoothing is applied on the image to reduce noise with Kernel size of 5.
 
--Canny Transform
+- Canny Transform
 Next Canny transform is applied on the image for edge detection. We use low threshold of 50 and high  threshold value of 150.
 
 - Region of Interest detection 
@@ -41,6 +41,10 @@ To avoid wrong lane lines, we can use slope and use the Hough lines which have s
 
 - Draw Lane Lines
 Finally draw the identified Lane Lines on the orginal image with funtion cv2.addWeighted().
+
+
+<img src="test_images/solidWhiteCurve.jpg" width="480" alt="Original Image" />  <img src="test_images_output/solidWhiteCurve.jpg" width="480" alt="Combined Image" />
+
 
 ## 2. Identify any shortcomings
 The limitation of this implementation is it works mostly for straight lane lines. When the implementation is run on a curved lane, the lane lines drawn are quite noisy.
