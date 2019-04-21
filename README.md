@@ -1,56 +1,53 @@
-# **Finding Lane Lines on the Road** 
+# **Finding Lane Lines on the Road - Udacity CarND Project 1** 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 <img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
 
-Overview
+Overview - Challenge
 ---
 
 When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
+In this project we will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
 
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
-
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
-
-
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
-
-1. Describe the pipeline
-
-2. Identify any shortcomings
-
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
-
-
-The Project
+Implementation
 ---
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
+This project is implemented in iPython notebook using Python language. All the packages were installed in local system and imported in Jupyter Notebook as per required.
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/83ec35ee-1e02-48a5-bdb7-d244bd47c2dc/lessons/8c82408b-a217-4d09-b81d-1bda4c6380ef/concepts/4f1870e0-3849-43e4-b670-12e6f2d4b7a7) if you haven't already.
+Reflection
+---
 
-**Step 2:** Open the code in a Jupyter Notebook
+## 1. The pipeline
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
+I have built a 6 step pipeline to approach the solution using the helper funtions. The aim here is to identify the Lane Lines in a stream  of video. And as a first step to achive this, I have implemented the lane identification on road images provided. Then this implementation is extended to video stream in the next step.
 
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
+- Grey Scale Converion
+Original colored image (RGB channels) is imported in notebook and converted to a greyscale image as a first step to reduce  complexity.
 
-`> jupyter notebook`
+- Guassian Smoothing
+Next Guassian smoothing is applied on the image to reduce noise with Kernel size of 5.
 
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+-Canny Transform
+Next Canny transform is applied on the image for edge detection. We use low threshold of 50 and high  threshold value of 150.
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
+- Region of Interest detection 
+Canny output is procssed to limit the detected edges only to  probable lane lines. fillPoly with quadrilateral vertices are used to identify the region of interest.
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+- Applying Hough Transform
+Next Hough transform is applied to identify straight lines. The line coordinates are used to draw lane lines using cv2.line() functions. There were 2 challenges I faced with the Hough lines- broken line segments instead of full lines and wrong lane lines due to noise.
+The Hough  transform output can produce segments instead of full lines. I have used cv2.filLine() method to extrapolate the lines.
+To avoid wrong lane lines, we can use slope and use the Hough lines which have slope more than 0.5. This reduced the noise by a great deal.
+
+- Draw Lane Lines
+Finally draw the identified Lane Lines on the orginal image with funtion cv2.addWeighted().
+
+## 2. Identify any shortcomings
+The limitation of this implementation is it works mostly for straight lane lines. When the implementation is run on a curved lane, the lane lines drawn are quite noisy.
+Also outside the road area can impact lane identification as seen in challenge video, where lot of noise is introduced by other objects and lanes are mis identified or noise is introduced in the final output.
+
+## 3. Suggest possible improvements
+I think  the noise can be reduced to a great extend by manipulation the slope as it has been observed the challenge video output. It can be tuned further to draw lane lines within a specific slope. 
+Also manipulating the Hough parameters to identify the curves and modifiying the region of interest to include curves may help in proper identification of curved Lane Lines.
+
 
