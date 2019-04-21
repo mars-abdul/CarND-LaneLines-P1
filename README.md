@@ -42,13 +42,15 @@ To avoid wrong lane lines, we can use slope and use the Hough lines which have s
 - Draw Lane Lines
 Finally draw the identified Lane Lines on the orginal image with funtion cv2.addWeighted().
 
+The orginal image and Lane Lines identified image ca be seen below.
 
-<img src="test_images/solidWhiteCurve.jpg" width="480" alt="Original Image" />  <img src="test_images_output/solidWhiteCurve.jpg" width="480" alt="Combined Image" />
+<img src="test_images/solidWhiteCurve.jpg" width="480" alt="Original Image" />  
+<img src="test_images_output/solidWhiteCurve.jpg" width="480" alt="Combined Image" />
 
 
 ## 2. Identify any shortcomings
 The limitation of this implementation is it works mostly for straight lane lines. When the implementation is run on a curved lane, the lane lines drawn are quite noisy.
-Also outside the road area can impact lane identification as seen in challenge video, where lot of noise is introduced by other objects and lanes are mis identified or noise is introduced in the final output.
+Also outside the road area can impact lane identification as seen in challenge video, where lot of noise is introduced by other objects and lanes are incorrectly identified or noise is introduced in the final output.
 
 ## 3. Suggest possible improvements
 I think  the noise can be reduced to a great extend by manipulation the slope as it has been observed the challenge video output. It can be tuned further to draw lane lines within a specific slope. 
